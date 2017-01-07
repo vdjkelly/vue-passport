@@ -72,28 +72,34 @@ You can use `success` event for trigger your local method when login was success
 
 It returns a payload with the user and the headers
 
+You can use `failed` event for trigger your local method when something was wrong.
+
+
 ```html
 <template>
    <div id="app">
       <login 
             api-url="http://your-domain.dev"
             secret="yourGrantClientSecret"
-            @success="login"
+            @success="handleLogin"
+            @failed="handleErrors"
+
       ></login>
    </div>
 </template>
 
 <script>
 import Login from 'vue-passport'
+import axios from 'axios'
+
+var instance = axios.create();
+
 export default {
   components: { Login },
   methods: {
-    login (payload) {
-          
+    handleLogin (payload) {
       this.$store.dispatch('setUser', payload.authUser)
-
       instance.defaults.headers.common['Authorization'] = payload.headers.Authorization;
-      
     },
     handleErrors (errors) {
       alert('Authorization error' + errors)
